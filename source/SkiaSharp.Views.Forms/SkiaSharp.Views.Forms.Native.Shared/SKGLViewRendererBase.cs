@@ -26,6 +26,11 @@ using Xamarin.Forms.Platform.Tizen;
 using SKNativeView = SkiaSharp.Views.Tizen.SKGLSurfaceView;
 using SKNativePaintGLSurfaceEventArgs = SkiaSharp.Views.Tizen.SKPaintGLSurfaceEventArgs;
 using TForms = Xamarin.Forms.Platform.Tizen.Forms;
+#elif __WPF__
+using System.Windows;
+using Xamarin.Forms.Platform.WPF;
+using SKNativeView = SkiaSharp.Views.Forms.SKFormsGLControl;
+using SKNativePaintGLSurfaceEventArgs = SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs;
 #endif
 
 namespace SkiaSharp.Views.Forms
@@ -59,7 +64,9 @@ namespace SkiaSharp.Views.Forms
 				(x, y) => GetScaledCoord(x, y));
 		}
 
-		public GRContext GRContext => Control.GRContext;
+		public GRContext GRContext => Control?.GRContext;
+
+		public SKSize CanvasSize => Control?.CanvasSize ?? SKSize.Empty;
 
 #if __IOS__
 		protected void SetDisablesUserInteraction(bool disablesUserInteraction)
@@ -189,6 +196,10 @@ namespace SkiaSharp.Views.Forms
 #elif WINDOWS_UWP
 			x = x * Control.ContentsScale;
 			y = y * Control.ContentsScale;
+#elif __WPF__
+			var m = PresentationSource.FromVisual(Control).CompositionTarget.TransformToDevice;
+			x = x * m.M11;
+			y = y * m.M22;
 #else
 #error Missing platform logic
 #endif
@@ -210,13 +221,13 @@ namespace SkiaSharp.Views.Forms
 		// the user asked for the size
 		private void OnGetCanvasSize(object sender, GetPropertyValueEventArgs<SKSize> e)
 		{
-			e.Value = Control?.CanvasSize ?? SKSize.Empty;
+			e.Value = CanvasSize;
 		}
 
 		// the user asked for the current GRContext
 		private void OnGetGRContext(object sender, GetPropertyValueEventArgs<GRContext> e)
 		{
-			e.Value = Control?.GRContext;
+			e.Value = GRContext;
 		}
 
 		private void OnPaintSurface(object sender, SKNativePaintGLSurfaceEventArgs e)

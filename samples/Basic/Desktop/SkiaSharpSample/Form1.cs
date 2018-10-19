@@ -12,14 +12,14 @@ namespace SkiaSharpSample
 			InitializeComponent();
 		}
 
-		private void skiaView_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
+		private void skiaView_PaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
 		{
 			// the the canvas and properties
 			var canvas = e.Surface.Canvas;
 
 			// get the screen density for scaling
 			var scale = 1f;
-			var scaledSize = new SKSize(e.Info.Width / scale, e.Info.Height / scale);
+			var scaledSize = new SKSize(e.BackendRenderTarget.Width / scale, e.BackendRenderTarget.Height / scale);
 
 			// handle the device screen density
 			canvas.Scale(scale);

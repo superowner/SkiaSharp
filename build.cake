@@ -2,7 +2,7 @@
 #addin nuget:?package=Cake.XCode&version=4.0.0
 #addin nuget:?package=Cake.FileHelpers&version=3.0.0
 #addin nuget:?package=SharpCompress&version=0.22.0
-#addin nuget:?package=Mono.ApiTools.NuGetDiff&version=1.0.0&loaddependencies=true
+#r "C:\Projects\NuGetComparer\Mono.ApiTools.NuGetDiff\bin\Debug\net462\Mono.ApiTools.NuGetDiff.dll"
 
 #tool "nuget:?package=xunit.runner.console&version=2.4.0"
 #tool "nuget:?package=mdoc&version=5.7.3.1"

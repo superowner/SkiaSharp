@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.skiaView = new SkiaSharp.Views.Desktop.SKControl();
+			this.skiaView = new SkiaSharp.Views.Desktop.SKGLControl();
 			this.SuspendLayout();
 			// 
 			// skiaView
@@ -39,7 +39,7 @@
 			this.skiaView.Size = new System.Drawing.Size(774, 529);
 			this.skiaView.TabIndex = 0;
 			this.skiaView.Text = "skControl1";
-			this.skiaView.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs>(this.skiaView_PaintSurface);
+			this.skiaView.PaintSurface += new System.EventHandler<SkiaSharp.Views.Desktop.SKPaintGLSurfaceEventArgs>(this.skiaView_PaintSurface);
 			// 
 			// Form1
 			// 
@@ -55,7 +55,7 @@
 
 		#endregion
 
-		private SkiaSharp.Views.Desktop.SKControl skiaView;
+		private SkiaSharp.Views.Desktop.SKGLControl skiaView;
 	}
 }
 

@@ -57,12 +57,13 @@ namespace SkiaSharp.Views.Forms
 		Pen
 	}
 
+	[Flags]
 	public enum SKMouseButton
 	{
 		Unknown,
 
-		Left,
-		Middle,
-		Right
+		Left   = 1 << 0,
+		Middle = 1 << 1,
+		Right  = 1 << 2
 	}
 }

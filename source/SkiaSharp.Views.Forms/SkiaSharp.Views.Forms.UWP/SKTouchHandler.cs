@@ -99,15 +99,36 @@ namespace SkiaSharp.Views.Forms
 			var id = evt.Pointer.PointerId;
 
 			var pointerPoint = evt.GetCurrentPoint(view);
+			var properties = pointerPoint.Properties;
 			var windowsPoint = pointerPoint.Position;
 			var skPoint = scalePixels(windowsPoint.X, windowsPoint.Y);
 
+			var action = GetTouchAction(touchActionType, properties);
 			var mouse = GetMouseButton(pointerPoint);
 			var device = GetTouchDevice(evt);
 
-			var args = new SKTouchEventArgs(id, touchActionType, mouse, device, skPoint, evt.Pointer.IsInContact);
+			var args = new SKTouchEventArgs(id, action, mouse, device, skPoint, evt.Pointer.IsInContact);
 			onTouchAction(args);
 			return args.Handled;
+		}
+
+		private static SKTouchAction GetTouchAction(SKTouchAction touchActionType, PointerPointProperties properties)
+		{
+			switch (properties.PointerUpdateKind)
+			{
+				case PointerUpdateKind.LeftButtonPressed:
+				case PointerUpdateKind.RightButtonPressed:
+				case PointerUpdateKind.MiddleButtonPressed:
+					touchActionType = SKTouchAction.Pressed;
+					break;
+				case PointerUpdateKind.LeftButtonReleased:
+				case PointerUpdateKind.RightButtonReleased:
+				case PointerUpdateKind.MiddleButtonReleased:
+					touchActionType = SKTouchAction.Released;
+					break;
+			}
+
+			return touchActionType;
 		}
 
 		private static SKTouchDeviceType GetTouchDevice(PointerRoutedEventArgs evt)
@@ -135,42 +156,34 @@ namespace SkiaSharp.Views.Forms
 
 			var mouse = SKMouseButton.Unknown;
 
-			// this is mainly for touch
-			if (properties.IsLeftButtonPressed)
+			if (properties.PointerUpdateKind == PointerUpdateKind.Other)
 			{
-				mouse = SKMouseButton.Left;
+				// the mouse move event
+				if (properties.IsLeftButtonPressed)
+					mouse |= SKMouseButton.Left;
+				if (properties.IsRightButtonPressed)
+					mouse |= SKMouseButton.Right;
+				if (properties.IsMiddleButtonPressed)
+					mouse |= SKMouseButton.Middle;
 			}
-			else if (properties.IsMiddleButtonPressed)
+			else
 			{
-				mouse = SKMouseButton.Middle;
-			}
-			else if (properties.IsRightButtonPressed)
-			{
-				mouse = SKMouseButton.Right;
-			}
-
-			// this is mainly for mouse
-			switch (properties.PointerUpdateKind)
-			{
-				case PointerUpdateKind.LeftButtonPressed:
-				case PointerUpdateKind.LeftButtonReleased:
-					mouse = SKMouseButton.Left;
-					break;
-				case PointerUpdateKind.RightButtonPressed:
-				case PointerUpdateKind.RightButtonReleased:
-					mouse = SKMouseButton.Right;
-					break;
-				case PointerUpdateKind.MiddleButtonPressed:
-				case PointerUpdateKind.MiddleButtonReleased:
-					mouse = SKMouseButton.Middle;
-					break;
-				case PointerUpdateKind.XButton1Pressed:
-				case PointerUpdateKind.XButton1Released:
-				case PointerUpdateKind.XButton2Pressed:
-				case PointerUpdateKind.XButton2Released:
-				case PointerUpdateKind.Other:
-				default:
-					break;
+				// the mouse up/down event
+				switch (properties.PointerUpdateKind)
+				{
+					case PointerUpdateKind.LeftButtonPressed:
+					case PointerUpdateKind.LeftButtonReleased:
+						mouse = SKMouseButton.Left;
+						break;
+					case PointerUpdateKind.RightButtonPressed:
+					case PointerUpdateKind.RightButtonReleased:
+						mouse = SKMouseButton.Right;
+						break;
+					case PointerUpdateKind.MiddleButtonPressed:
+					case PointerUpdateKind.MiddleButtonReleased:
+						mouse = SKMouseButton.Middle;
+						break;
+				}
 			}
 
 			return mouse;

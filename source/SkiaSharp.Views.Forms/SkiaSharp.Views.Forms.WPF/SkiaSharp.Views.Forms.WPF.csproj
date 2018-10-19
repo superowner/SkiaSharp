@@ -4,24 +4,33 @@
     <TargetFramework>net45</TargetFramework>
     <OutputTypeEx>library</OutputTypeEx>
     <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
-    <RootNamespace>SkiaSharp.Views.WPF</RootNamespace>
-    <AssemblyName>SkiaSharp.Views.WPF</AssemblyName>
-    <PackagingGroup>SkiaSharp.Views</PackagingGroup>
+    <RootNamespace>SkiaSharp.Views.Forms</RootNamespace>
+    <AssemblyName>SkiaSharp.Views.Forms</AssemblyName>
+    <SignAssembly>false</SignAssembly>
+    <PackagingGroup>SkiaSharp.Views.Forms</PackagingGroup>
     <PackagingPlatform>net45</PackagingPlatform>
     <DefineConstants>$(DefineConstants);__DESKTOP__;__WPF__</DefineConstants>
   </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="mdoc" Version="5.7.3.1" PrivateAssets="All" />
     <PackageReference Include="MSBuild.Sdk.Extras" Version="1.6.55" PrivateAssets="All" />
     <PackageReference Include="OpenTK" Version="3.0.1" />
     <PackageReference Include="OpenTK.GLControl" Version="3.0.1" />
+    <PackageReference Include="Xamarin.Forms" Version="3.0.0.561731" />
+    <PackageReference Include="Xamarin.Forms.Platform.WPF" Version="3.0.0.561731" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\binding\SkiaSharp.Desktop\SkiaSharp.Desktop.csproj" />
-    <ProjectReference Include="..\SkiaSharp.Views.Desktop\SkiaSharp.Views.Desktop.csproj" />
+    <ProjectReference Include="..\..\SkiaSharp.Views\SkiaSharp.Views.Desktop\SkiaSharp.Views.Desktop.csproj" />
+    <ProjectReference Include="..\..\SkiaSharp.Views\SkiaSharp.Views.WPF\SkiaSharp.Views.WPF.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SkiaSharp.Views.Shared\Properties\SkiaSharpViewsAssemblyInfo.cs" Link="Properties\SkiaSharpViewsAssemblyInfo.cs" />
+    <Compile Include="..\SkiaSharp.Views.Forms.Shared\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\SkiaSharp.Views.Forms.Native.Shared\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   <Import Project="..\..\SkiaSharp.Build.targets" />
   <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
